@@ -2,6 +2,9 @@
 DEPENDS_prepend += "swift-native swift glibc gcc libgcc "
 RDEPENDS_${PN} += " swift "
 
+TUNED_ARCH = "${TUNE_ARCH}${@bb.utils.contains('TUNE_FEATURES', 'armv7a', 'v7', '', d)}"
+ABI_EXTENSION = "${ABIEXTENSION}${ARMPKGSFX_EABI}"
+
 # Additional parameters to pass to SPM
 EXTRA_OESWIFT ?= ""
 
@@ -33,17 +36,20 @@ python swift_do_configure() {
 
     cxx_include_base = recipe_sysroot + "/usr/include/c++"
     cxx_include_list = os.listdir(cxx_include_base)
+
+    # FIXME Work in the choice of c++ (g++, clang++, etc)
     if len(cxx_include_list) != 1:
         bb.fatal("swift bbclass detected more than one c++ runtime, unable to determine which one to use")
+
     cxx_version = cxx_include_list[0]
-    
+
     d.setVar('SWIFT_CXX_VERSION', cxx_version)
 
     swift_destination_template = """{
         "version":1,
         "sdk":"${STAGING_DIR_TARGET}/",
-        "toolchain-bin-dir":"${STAGING_DIR_NATIVE}/opt/swift-arm/usr/bin",
-        "target":"armv7-unknown-linux-gnueabihf",
+        "toolchain-bin-dir":"${STAGING_DIR_NATIVE}/opt/swift-${TUNE_ARCH}/usr/bin",
+        "target":"${TUNED_ARCH}-unknown-linux-gnu${ABI_EXTENSION}",
         "dynamic-library-extension":"so",
         "extra-cc-flags":[ 
             "-fPIC",
@@ -52,7 +58,7 @@ python swift_do_configure() {
         ],
         "extra-swiftc-flags":[ 
             "-target",
-            "armv7-unknown-linux-gnueabihf",
+            "${TUNED_ARCH}-unknown-linux-gnu${ABI_EXTENSION}",
             "-use-ld=lld",
             "-tools-directory",
             "/usr/bin",
@@ -82,7 +88,7 @@ python swift_do_configure() {
     swift_destination =  d.expand(swift_destination_template)
 
     d.delVar("SWIFT_CXX_VERSION")
-    
+
     configJSON = open(workdir + "/destination.json", "w")
     configJSON.write(swift_destination)
     configJSON.close()
@@ -91,7 +97,7 @@ python swift_do_configure() {
 swift_do_compile()  {
     #Linker isn't finding crtbeginS.o and crtendS.o under ${TARGET_SYS} path
     cp -r ${WORKDIR}/recipe-sysroot/usr/lib/${TARGET_SYS}/*/* ${WORKDIR}/recipe-sysroot/usr/lib
-	cd ${S}
+    cd ${S}
     ${WORKDIR}/recipe-sysroot-native/usr/bin/swift build -v -c release --destination ${WORKDIR}/destination.json ${EXTRA_OESWIFT}
 }
 

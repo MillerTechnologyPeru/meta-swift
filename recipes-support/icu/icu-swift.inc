@@ -26,12 +26,12 @@ EXTRA_OECONF_class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 
 PREPROCESS_RELOCATE_DIRS = "${datadir}/${BPN}/${PV}"
 do_install_append_class-native() {
-	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
-	cp -r ${B}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
-	cp -r ${B}/config/icucross.inc ${D}/${STAGING_ICU_DIR_NATIVE}/config
-	cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
-	cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
-	cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
+    mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
+    cp -r ${B}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
+    cp -r ${B}/config/icucross.inc ${D}/${STAGING_ICU_DIR_NATIVE}/config
+    cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
+    cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
+    cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
 
     rm -r ${D}${STAGING_BINDIR_NATIVE}
     rm -r ${D}${STAGING_SBINDIR_NATIVE}
