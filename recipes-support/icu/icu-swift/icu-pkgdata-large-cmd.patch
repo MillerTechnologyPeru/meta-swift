@@ -15,7 +15,7 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 diff --git a/tools/pkgdata/pkgdata.cpp b/tools/pkgdata/pkgdata.cpp
 --- a/tools/pkgdata/pkgdata.cpp
 +++ b/tools/pkgdata/pkgdata.cpp
-@@ -1019,7 +1019,7 @@ normal_symlink_mode:
+@@ -1109,7 +1109,7 @@ normal_symlink_mode:
  
  static int32_t pkg_installLibrary(const char *installDir, const char *targetDir, UBool noVersion) {
      int32_t result = 0;
