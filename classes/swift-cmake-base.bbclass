@@ -8,6 +8,18 @@ TARGET_CPU_NAME = "${@oe.utils.conditional('TARGET_ARCH', 'arm', 'armv7-a', 'aar
 
 HOST_CC_ARCH_prepend = "-target ${SWIFT_TARGET_NAME}"
 
+# Disable Security flags
+GCCPIE = ""
+lcl_maybe_fortify = ""
+SECURITY_STRINGFORMAT = ""
+SECURITY_PIE_CFLAGS = ""
+SECURITY_NOPIE_CFLAGS = ""
+SECURITY_STACK_PROTECTOR = ""
+SECURITY_CFLAGS = ""
+SECURITY_NO_PIE_CFLAGS = ""
+SECURITY_LDFLAGS = ""
+SECURITY_X_LDFLAGS = ""
+
 ################################################################################
 # NOTE: The host running bitbake must have lld available and the following     #
 # must be added to the local.conf file:                                        #
